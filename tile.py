@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 from config import *
 
@@ -29,8 +30,10 @@ class Tile:
         self.connection_points = rotate_list(self.connection_points, rotation)
 
     def get_image(self):
-        img = plt.imread(IMAGE_PATH + self.tile_type + '.png')
-        return np.rot90(img, self.rotation)
+        with Image.open(IMAGE_PATH + self.tile_type + '.png') as img:
+            img = img.convert('RGB').resize((TILE_SIZE, TILE_SIZE))
+            img_array = np.asarray(img)
+        return np.rot90(img_array, self.rotation)
 
     @staticmethod
     def setup_tiles():
