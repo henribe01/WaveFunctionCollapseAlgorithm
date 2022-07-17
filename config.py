@@ -1,0 +1,4 @@
+TILE_SIZE = 20
+CANVAS_SIZE = 400
+IMAGE_PATH = 'images/'
+
