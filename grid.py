@@ -18,18 +18,10 @@ class Grid:
         self.current_index = np.array([rows // 2, rows // 2])
         self.rows = rows
 
-    def get_random_free_index(self):
-        """Returns a random index with no tile"""
-        free_index = []
-        for i in range(self.rows):
-            for j in range(self.rows):
-                if self.grid[i][j].tile is None:
-                    free_index.append([i, j])
-        return choice(free_index)
-
     def get_index_lowest_cell(self):
         """Returns the index of the lowest cell"""
-        all_non_zero_cells = [self.grid[i][j].entropy_value for i in range(self.rows) for j in range(self.rows) if self.grid[i][j].entropy_value != 0]
+        all_non_zero_cells = [self.grid[i][j].entropy_value for i in range(self.rows) for j in range(self.rows) if
+                              self.grid[i][j].entropy_value != 0]
         if len(all_non_zero_cells) == 0:
             return None
         lowest_entropy = min(all_non_zero_cells)
@@ -37,26 +29,6 @@ class Grid:
             [i, j] for i in range(self.rows) for j in range(self.rows)
             if self.grid[i][j].entropy_value == lowest_entropy]
         return choice(lowest_entropy_cells)
-
-    def get_index_lowest_adjacent_cell(self):
-        """Get the lowest cell in adjacent cells, that is not 0, if multiple
-        have the same value, a random one is picked """
-        possible_direction = []
-        for direction in DIRECTIONS:
-            adjacent_cell = self.get_adjacent_cell(direction)
-            if adjacent_cell is not None:
-                if adjacent_cell.entropy_value != 0:
-                    possible_direction.append(direction)
-        if len(possible_direction) == 0:
-            return self.get_random_free_index()
-        lowest_entropy = min(
-            [self.get_adjacent_cell(direction).entropy_value for direction in
-             possible_direction])
-        lowest_entropy_cells = [direction for direction in possible_direction
-                                if self.get_adjacent_cell(
-                direction).entropy_value == lowest_entropy]
-        move_direction = choice(lowest_entropy_cells)
-        return self.current_index + move_direction
 
     def get_adjacent_cell(self, direction):
         """Returns the cell in the given direction"""
@@ -78,10 +50,6 @@ class Grid:
         """Sets the current index"""
         self.current_index = index
 
-    def get_cell(self, index):
-        """Returns the cell at the given index"""
-        return self.grid[index[0]][index[1]]
-
     def set_connection_points_adjacent_cells(self):
         """Sets the connection points of the adjacent cells"""
         for index, direction in enumerate(DIRECTIONS):
@@ -102,6 +70,7 @@ class Grid:
         """Sets a random possible tile at the current index"""
         tile = choice(self.get_current_cell().possible_tiles)
         self.set_tile_at_current_index(tile)
+
 
 class Cell:
     def __init__(self):
